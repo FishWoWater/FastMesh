@@ -51,9 +51,11 @@ if __name__ == "__main__":
 
     set_seed(args.seed, device_specific=True)
     if args.variant=="V1K":
-        model = MODELS[args.model_name].from_pretrained("WopperSet/FastMesh-V1K")
+        model = MODELS[args.model_name].from_pretrained("WopperSet/FastMesh-V1K", 
+            local_dir="pretrained/FastMesh-V1K", cache_dir="pretrained/FastMesh-V1K")
     elif args.variant=="V4K":
-        model = MODELS[args.model_name].from_pretrained("WopperSet/FastMesh-V4K")
+        model = MODELS[args.model_name].from_pretrained("WopperSet/FastMesh-V4K", 
+            local_dir="pretrained/FastMesh-V4K", cache_dir="pretrained/FastMesh-V4K")
     model = accelerator.prepare(model)
     model.eval()
 
