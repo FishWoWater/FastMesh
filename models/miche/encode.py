@@ -42,9 +42,9 @@ def reconstruction(args, model, bounds=(-1.25, -1.25, -1.25, 1.25, 1.25, 1.25), 
     
     return 0
 
-def load_model(ckpt_path="models/miche/checkpoints/aligned_shape_latents/shapevae-256.ckpt"):
+def load_model(ckpt_path="thirdparty/FastMesh/models/miche/checkpoints/aligned_shape_latents/shapevae-256.ckpt"):
     
-    model_config = OmegaConf.load("models/miche/configs/aligned_shape_latents/shapevae-256.yaml")
+    model_config = OmegaConf.load("thirdparty/FastMesh/models/miche/configs/aligned_shape_latents/shapevae-256.yaml")
     if hasattr(model_config, "model"):
         model_config = model_config.model
 

@@ -4,10 +4,10 @@ import numpy as np
 import torch
 import torch.nn as nn
 import networkx as nx
-from models.miche.encode import load_model
-from models.modules.transformers import AdaLNSelfAttn
+from .miche.encode import load_model
+from .modules.transformers import AdaLNSelfAttn
 from torch.utils.checkpoint import checkpoint
-from models.models import register
+from .models import register
 
 
 @register("FaceGen")

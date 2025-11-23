@@ -4,9 +4,54 @@ import copy
 import numpy as np
 import time
 from scipy.spatial import KDTree
-from utils import load_model
-from models.models import register, MODELS
+from .models import register, MODELS
 from huggingface_hub import PyTorchModelHubMixin
+
+def copy_state_dict(cur_state_dict, pre_state_dict, prefix = '', drop_prefix='', fix_loaded=False):
+    success_layers, failed_layers = [], []
+    def _get_params(key):
+        key = key.replace(drop_prefix,'')
+        key = prefix + key
+        if key in pre_state_dict:
+            return pre_state_dict[key]
+        return None
+
+    for k in cur_state_dict.keys():
+        v = _get_params(k)
+        try:
+            if v is None:
+                failed_layers.append(k)
+                continue
+            cur_state_dict[k].copy_(v)
+            if prefix in k and prefix!='':
+                k=k.split(prefix)[1]
+            success_layers.append(k)
+        except:
+            print('copy param {} failed, mismatched'.format(k)) # logging.info
+            continue
+    print('missing parameters of layers:{}'.format(failed_layers))
+
+    if fix_loaded and len(failed_layers)>0:
+        print('fixing the layers that were loaded successfully, while train the layers that failed,')
+        for k in cur_state_dict.keys():
+            try:
+                if k in success_layers:
+                    cur_state_dict[k].requires_grad=False
+            except:
+                print('fixing the layer {} failed'.format(k))
+
+    return success_layers
+
+def load_model(pretrained_model, model, prefix = '', drop_prefix='',optimizer=None, **kwargs):
+
+    # pretrained_model = torch.load(path)
+    current_model = model.state_dict()
+    if isinstance(pretrained_model, dict):
+        if 'model_state_dict' in pretrained_model:
+            pretrained_model = pretrained_model['model_state_dict']
+    copy_state_dict(current_model, pretrained_model, prefix = prefix, drop_prefix=drop_prefix, **kwargs)
+
+    return model
 
 def compute_vertex_normals(point_cloud, vertices, k=10):
     vertices = (vertices-vertices.min())/(vertices.max()-vertices.min())*2 - 1

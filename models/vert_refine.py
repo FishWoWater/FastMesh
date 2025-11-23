@@ -6,8 +6,8 @@ from torch.nn import Module
 
 from .models import register
 from .pc_encoder import PointEmbed
-from models.modules.transformers import AdaLNSelfAttn
-from models.miche.encode import load_model
+from .modules.transformers import AdaLNSelfAttn
+from .miche.encode import load_model
 
 @register("VertRefine")
 class VertRefine(Module):
@@ -118,7 +118,7 @@ class VertRefine(Module):
         processed_point_feature = self.process_point_feature(point_feature=point_feature)
         BATCH = point_feature.shape[0]
 
-        vertices = torch.nn.utils.rnn.pad_sequence(vertices, batch_first=True, padding_value=-1, padding_side='right')
+        vertices = torch.nn.utils.rnn.pad_sequence(vertices, batch_first=True, padding_value=-1)
         vertices = vertices.reshape(BATCH, -1, 3).to(point_feature.dtype).to(point_feature.device)
         attention_mask = vertices[:,:,0] != self.pad_id
 

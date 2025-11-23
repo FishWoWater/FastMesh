@@ -2,10 +2,10 @@ import torch
 import torch.nn.functional as nnf
 from torch import nn
 from transformers import AutoModelForCausalLM
-from models.miche.encode import load_model
-from models.shape_opt import ShapeOPTConfig
-from models.models import register
-from models.vert_refine import VertRefine
+from .miche.encode import load_model
+from .shape_opt import ShapeOPTConfig
+from .models import register
+from .vert_refine import VertRefine
 
 def coor_discretize(
     t,
@@ -250,8 +250,8 @@ class SingleGPT(nn.Module):
 
         if self.use_refine:
             refined_vertices = self.refine_net.refine_vertices(gen_vert, point_feature)
-            gen_vert = torch.nn.utils.rnn.pad_sequence(gen_vert, batch_first=True, padding_value=-1, padding_side='right').to(point_feature.device)
+            gen_vert = torch.nn.utils.rnn.pad_sequence(gen_vert, batch_first=True, padding_value=-1).to(point_feature.device)
         else:
-            refined_vertices = torch.nn.utils.rnn.pad_sequence(gen_vert, batch_first=True, padding_value=-1, padding_side='right').to(point_feature.device)
+            refined_vertices = torch.nn.utils.rnn.pad_sequence(gen_vert, batch_first=True, padding_value=-1).to(point_feature.device)
 
         return refined_vertices, gen_vert
