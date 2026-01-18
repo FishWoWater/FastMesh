@@ -78,7 +78,7 @@ class SingleGPT(nn.Module):
         self.config.word_embed_proj_dim = self.config.hidden_size
 
         self.transformer = AutoModelForCausalLM.from_config(
-            config=self.config, use_flash_attention_2 = True
+            config=self.config#, use_flash_attention_2 = True
         )
 
         self.cond_head_proj = nn.Linear(self.cond_dim, self.config.word_embed_proj_dim)

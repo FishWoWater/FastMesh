@@ -1,5 +1,5 @@
 from transformers import AutoModelForCausalLM, AutoConfig, OPTConfig
-from transformers.models.opt.modeling_opt import OPTForCausalLM, OPTModel, OPTDecoder, OPTLearnedPositionalEmbedding, OPTDecoderLayer, OptFlashAttention2, OPT_ATTENTION_CLASSES
+from transformers.models.opt.modeling_opt import OPTForCausalLM, OPTModel, OPTDecoder, OPTLearnedPositionalEmbedding, OPTDecoderLayer
 from transformers.models.llama.modeling_llama import apply_rotary_pos_emb
 from typing import List, Optional, Tuple, Union
 from transformers.modeling_outputs import (
@@ -23,7 +23,7 @@ class ShapeOPTConfig(OPTConfig):
 
 class ShapeOPT(OPTForCausalLM):
     config_class = ShapeOPTConfig
-    def __init__(self, config: ShapeOPTConfig):
+    def __init__(self, config: ShapeOPTConfig, **kwargs):
         super(OPTForCausalLM, self).__init__(config)
         self.model = ShapeOPTModel(config)
         self.n_discrete_size = config.n_discrete_size
